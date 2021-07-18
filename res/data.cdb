@@ -1,0 +1,41 @@
+{
+	"sheets": [
+		{
+			"name": "ConstDb",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "constId"
+				},
+				{
+					"typeStr": "4",
+					"name": "value",
+					"display": null
+				},
+				{
+					"typeStr": "1",
+					"name": "doc",
+					"opt": true,
+					"display": null
+				}
+			],
+			"lines": [
+				{
+					"constId": "MyCdbConstant",
+					"value": 3.5,
+					"doc": "This documentation will be displayed when using VScode auto-complete for this specific value."
+				}
+			],
+			"props": {
+				"separatorTitles": [
+					"This sheet allows to access CastleDB \"constants\" in your code. Just call \"Const.db.MyCdbConstant\" to access its Float value. These values will be updated on runtime if hot-reloading is enabled. DO NOT MODIFY THE SHEET NAME OR COLUMNS!"
+				]
+			},
+			"separatorIds": [
+				"MyCdbConstant"
+			]
+		}
+	],
+	"customTypes": [],
+	"compress": false
+}
