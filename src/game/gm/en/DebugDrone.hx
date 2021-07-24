@@ -147,7 +147,7 @@ class DebugDrone extends Entity {
 		debug( M.round(hxd.Timer.fps()) + " FPS" );
 
 		// Collisions
-		if( level.hasCollision(cx,cy) )
+		if( level.hasAnyCollision(cx,cy) )
 			setColor(0xff0000);
 		else
 			setColor(DEFAULT_COLOR);

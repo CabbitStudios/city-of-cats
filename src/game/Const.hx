@@ -33,7 +33,7 @@ class Const {
 	public static final FIXED_UPDATE_FPS = 30;
 
 	/** Grid size in pixels **/
-	public static final GRID = 16;
+	public static final GRID = 32;
 
 	/** "Infinite", sort-of. More like a "big number" **/
 	public static final INFINITE : Int = 0xfffFfff;

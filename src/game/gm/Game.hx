@@ -47,7 +47,8 @@ class Game extends Process {
 		hud = new ui.Hud();
 		camera = new Camera();
 
-		startLevel(Assets.worldData.all_levels.FirstLevel);
+		startLevel(Assets.worldData.all_levels.StartLevel);
+		new Player();
 	}
 
 

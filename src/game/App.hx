@@ -56,8 +56,7 @@ class App extends dn.Process {
 	}
 
 	final function _createGameInstance() {
-		// new Game(); // <---- Uncomment this to start an empty Game instance
-		new sample.SampleGame(); // <---- Uncomment this to start the Sample Game instance
+		new Game();
 	}
 
 
@@ -71,9 +70,9 @@ class App extends dn.Process {
 	**/
 	function initEngine() {
 		// Engine settings
-		engine.backgroundColor = 0xff<<24 | 0x111133;
+		engine.backgroundColor = 0xffdfe0e8;
         #if( hl && !debug )
-        engine.fullScreen = true;
+        engine.fullScreen = false;
         #end
 
 		// Heaps resource management

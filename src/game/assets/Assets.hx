@@ -7,25 +7,31 @@ import dn.heaps.slib.*;
 **/
 class Assets {
 	// Fonts
-	public static var fontPixel : h2d.Font;
-	public static var fontTiny : h2d.Font;
-	public static var fontSmall : h2d.Font;
-	public static var fontMedium : h2d.Font;
-	public static var fontLarge : h2d.Font;
+	public static var fontPixel:h2d.Font;
+	public static var fontTiny:h2d.Font;
+	public static var fontSmall:h2d.Font;
+	public static var fontMedium:h2d.Font;
+	public static var fontLarge:h2d.Font;
 
 	/** Main atlas **/
-	public static var tiles : SpriteLib;
+	public static var tiles:SpriteLib;
+
+	/**
+	 * Cat Atlas
+	 */
+	public static var cat:SpriteLib;
 
 	/** Fully typed access to slice names present in Aseprite file (eg. `trace(tilesDict.myStoneTexture)` )**/
 	public static var tilesDict = dn.heaps.assets.Aseprite.getDict(hxd.Res.atlas.tiles);
+	public static var catDict = dn.heaps.assets.Aseprite.getDict(hxd.Res.atlas.cat);
 
 	/** LDtk world data **/
-	public static var worldData : World;
-
+	public static var worldData:World;
 
 	static var _initDone = false;
+
 	public static function init() {
-		if( _initDone )
+		if (_initDone)
 			return;
 		_initDone = true;
 
@@ -38,6 +44,7 @@ class Assets {
 
 		// build sprite atlas directly from Aseprite file
 		tiles = dn.heaps.assets.Aseprite.convertToSLib(Const.FPS, hxd.Res.atlas.tiles.toAseprite());
+		cat = dn.heaps.assets.Aseprite.convertToSLib(Const.FPS, hxd.Res.atlas.cat.toAseprite());
 
 		// CastleDB file hot reloading
 		#if debug
@@ -45,16 +52,16 @@ class Assets {
 			// Only reload actual updated file from disk after a short delay, to avoid reading a file being written
 			App.ME.delayer.cancelById("cdb");
 			App.ME.delayer.addS("cdb", function() {
-				CastleDb.load( hxd.Res.data.entry.getBytes().toString() );
+				CastleDb.load(hxd.Res.data.entry.getBytes().toString());
 				Const.fillCdbValues();
-				if( Game.exists() )
+				if (Game.exists())
 					Game.ME.onDbReload();
 			}, 0.2);
 		});
 		#end
 
 		// Parse castleDB JSON
-		CastleDb.load( hxd.Res.data.entry.getText() );
+		CastleDb.load(hxd.Res.data.entry.getText());
 		Const.fillCdbValues();
 
 		// `const.json` hot-reloading
@@ -62,8 +69,8 @@ class Assets {
 			// Only reload actual updated file from disk after a short delay, to avoid reading a file being written
 			App.ME.delayer.cancelById("constJson");
 			App.ME.delayer.addS("constJson", function() {
-				Const.fillJsonValues( hxd.Res.const.entry.getBytes().toString() );
-				if( Game.exists() )
+				Const.fillJsonValues(hxd.Res.const.entry.getBytes().toString());
+				if (Game.exists())
 					Game.ME.onDbReload();
 			}, 0.2);
 		});
@@ -73,24 +80,23 @@ class Assets {
 
 		// LDtk file hot-reloading
 		#if debug
-		var res = try hxd.Res.load(worldData.projectFilePath.substr(4)) catch(_) null; // assume the LDtk file is in "res/" subfolder
-		if( res!=null )
-			res.watch( ()->{
+		var res = try hxd.Res.load(worldData.projectFilePath.substr(4)) catch (_) null; // assume the LDtk file is in "res/" subfolder
+		if (res != null)
+			res.watch(() -> {
 				// Only reload actual updated file from disk after a short delay, to avoid reading a file being written
 				App.ME.delayer.cancelById("ldtk");
 				App.ME.delayer.addS("ldtk", function() {
-					worldData.parseJson( res.entry.getText() );
-					if( Game.exists() )
+					worldData.parseJson(res.entry.getText());
+					if (Game.exists())
 						Game.ME.onLdtkReload();
 				}, 0.2);
 			});
 		#end
 	}
 
-
 	public static function update(tmod) {
 		tiles.tmod = tmod;
+		cat.tmod = tmod;
 		// <-- add other atlas TMOD updates here
 	}
-
 }
