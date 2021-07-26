@@ -1,5 +1,7 @@
 package gm;
 
+import h3d.Vector;
+import h2d.Flow;
 import h2d.filter.Outline;
 
 enum InputCommand {
@@ -23,6 +25,7 @@ class Player extends gm.Entity {
 	var wallCurrentlyTouching:Null<Int> = null;
 
 	var isWallClinging(get, never):Bool;
+	var seenStoryMarks:Map<String, Int> = new Map();
 
 	function get_isWallClinging():Bool {
 		return isAlive() && wallCurrentlyTouching != null && cd.has("wallClinging");
@@ -97,11 +100,6 @@ class Player extends gm.Entity {
 				queueCommand(Jump);
 			}
 
-			if ((ca.rbPressed() || ca.isKeyboardPressed(K.F)) && !cd.has("laserShot")) {
-				cd.setS("laserShot", 0.3);
-				fx.laser(centerX, centerY - 2, dir);
-			}
-
 			// Walk
 			if (!App.ME.anyInputHasFocus() && ca.leftDist() > 0) {
 				// As mentioned above, we don't touch physics values (eg. `dx`) here. We just store some "requested walk speed", which will be applied to actual physics in fixedUpdate.
@@ -109,10 +107,9 @@ class Player extends gm.Entity {
 
 				if (cd.has("directionLocked")) {
 					walkSpeed = M.sign(walkSpeed) == M.sign(dx) ? walkSpeed : 0;
-				}
-
-				if (!cd.has("directionLocked"))
+				} else {
 					dir = M.radDistance(0, ca.leftAngle()) <= M.PIHALF ? 1 : -1;
+				}
 
 				if (dir == wallCurrentlyTouching && !onGround)
 					cd.setS("wallClinging", 0.1);
@@ -127,7 +124,7 @@ class Player extends gm.Entity {
 					});
 				}
 
-				if (isWallClinging) {
+				if (isWallClinging && !recentlyOnGround) {
 					chargeAction("jump", 0.08, () -> {
 						dy = -0.5;
 						dx = 0.45 * -wallCurrentlyTouching;
@@ -137,7 +134,6 @@ class Player extends gm.Entity {
 						dir = -wallCurrentlyTouching;
 					});
 				}
-				
 			}
 		}
 	}
@@ -148,6 +144,16 @@ class Player extends gm.Entity {
 		if (onGround && M.fabs(dx) > 0.01 && !cd.has("dirtJet")) {
 			fx.dirt(centerX, bottom, rnd(1, 3));
 			cd.setS("dirtJet", 0.1);
+		}
+
+		for (mark in level.data.l_Entities.all_Story_Mark) {
+			if (seenStoryMarks.exists(mark.identifier))
+				continue;
+
+			if (Lib.rectangleOverlaps(mark.pixelX, mark.pixelY, mark.width, mark.height, centerX, centerY, wid, hei)) {
+				say(mark.f_Story_Text, mark.f_Color_int);
+				seenStoryMarks.set(mark.identifier, 0);
+			}
 		}
 	}
 
@@ -175,6 +181,18 @@ class Player extends gm.Entity {
 
 	override function postUpdate() {
 		super.postUpdate();
+
+		if (saying != null) {
+			saying.scaleX += (1 - saying.scaleX) * M.fmin(1, 0.3 * tmod);
+			saying.scaleY += (1 - saying.scaleY) * M.fmin(1, 0.3 * tmod);
+			saying.x = Std.int(sprX - saying.outerWidth * 0.5 * saying.scaleX);
+			saying.y = Std.int(sprY - saying.outerHeight * saying.scaleY - hei - 10);
+			if (!cd.has("keepSaying")) {
+				saying.alpha -= 0.03 * tmod;
+				if (saying.alpha <= 0)
+					clearSaying();
+			}
+		}
 	}
 
 	/**
@@ -204,4 +222,35 @@ class Player extends gm.Entity {
 			true;
 		} else false;
 	}
+
+	function say(str, color) {
+		clearSaying();
+
+		saying = new h2d.Flow();
+		game.scroller.add(saying, Const.DP_UI);
+		saying.scaleX = 2;
+		saying.scaleY = 0;
+		saying.layout = Vertical;
+		saying.horizontalAlign = Middle;
+		saying.verticalSpacing = 3;
+
+		var tf = new h2d.Text(Assets.fontPixel, saying);
+		tf.maxWidth = 120;
+		tf.text = str;
+		tf.textColor = color;
+
+		cd.setS("keepSaying", 2.5 + str.length * 0.05);
+
+		var s = Assets.tiles.h_get(Assets.tilesDict.sayLine, saying);
+		s.colorize(color);
+	}
+
+	function clearSaying() {
+		if (saying != null) {
+			saying.remove();
+			saying = null;
+		}
+	}
+
+	var saying:Flow;
 }

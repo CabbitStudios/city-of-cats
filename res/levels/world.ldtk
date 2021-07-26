@@ -9,7 +9,7 @@
 		"url": "https://ldtk.io"
 	},
 	"jsonVersion": "0.9.3",
-	"nextUid": 33,
+	"nextUid": 36,
 	"worldLayout": "GridVania",
 	"worldGridWidth": 256,
 	"worldGridHeight": 256,
@@ -462,6 +462,72 @@
 			"pivotX": 0.5,
 			"pivotY": 0.5,
 			"fieldDefs": []
+		},
+		{
+			"identifier": "Story_Mark",
+			"uid": 33,
+			"tags": [],
+			"width": 16,
+			"height": 16,
+			"resizableX": true,
+			"resizableY": true,
+			"keepAspectRatio": false,
+			"fillOpacity": 1,
+			"lineOpacity": 1,
+			"hollow": true,
+			"color": "#94D9B3",
+			"renderMode": "Rectangle",
+			"showName": true,
+			"tilesetId": null,
+			"tileId": null,
+			"tileRenderMode": "FitInside",
+			"maxCount": 0,
+			"limitScope": "PerLevel",
+			"limitBehavior": "MoveLastOne",
+			"pivotX": 0,
+			"pivotY": 0,
+			"fieldDefs": [
+				{
+					"identifier": "Story_Text",
+					"__type": "String",
+					"uid": 34,
+					"type": "F_Text",
+					"isArray": false,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "ValueOnly",
+					"editorDisplayPos": "Center",
+					"editorAlwaysShow": false,
+					"editorCutLongValues": true,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": null,
+					"textLanguageMode": null
+				},
+				{
+					"identifier": "Color",
+					"__type": "Color",
+					"uid": 35,
+					"type": "F_Color",
+					"isArray": false,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "ValueOnly",
+					"editorDisplayPos": "Above",
+					"editorAlwaysShow": false,
+					"editorCutLongValues": true,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": { "id": "V_Int", "params": [16777215] },
+					"textLanguageMode": null
+				}
+			]
 		}
 	], "tilesets": [
 		{
@@ -542,6 +608,35 @@
 							"defUid": 6,
 							"px": [80,400],
 							"fieldInstances": []
+						},
+						{
+							"__identifier": "Story_Mark",
+							"__grid": [9,0],
+							"__pivot": [0,0],
+							"__tile": null,
+							"width": 96,
+							"height": 192,
+							"defUid": 33,
+							"px": [288,0],
+							"fieldInstances": [
+								{
+									"__identifier": "Story_Text",
+									"__value": "Phew. I need to be careful with these heights...",
+									"__type": "String",
+									"defUid": 34,
+									"realEditorValues": [{
+										"id": "V_String",
+										"params": ["Phew. I need to be careful with these heights..."]
+									}]
+								},
+								{
+									"__identifier": "Color",
+									"__value": "#C2FFFF",
+									"__type": "Color",
+									"defUid": 35,
+									"realEditorValues": [{ "id": "V_Int", "params": [12779519] }]
+								}
+							]
 						}
 					]
 				},
